@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "919699581110",
+    "firebase_url": "https://clickblitz-be757-default-rtdb.firebaseio.com",
+    "project_id": "clickblitz-be757",
+    "storage_bucket": "clickblitz-be757.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919699581110:android:7025140491d0ae41c19e17",
+        "android_client_info": {
+          "package_name": "com.sebasay.clickblitz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkM6IwAzsnhFSZRsposlXD_6RbUgd5zTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

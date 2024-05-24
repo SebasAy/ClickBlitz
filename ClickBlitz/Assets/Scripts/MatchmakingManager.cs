@@ -42,6 +42,7 @@ public class MatchmakingController : MonoBehaviour
             // Comprobar si hay suficientes jugadores en la cola
             if (matchmakingQueue.Count >= 2)
             {
+                Debug.Log("2 jugadores buscando");
                 StartCoroutine(MatchmakePlayers());
             }
         }

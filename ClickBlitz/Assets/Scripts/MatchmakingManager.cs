@@ -13,8 +13,7 @@ public class MatchmakingController : MonoBehaviour
     [SerializeField] private Button _matchmakingButton;
 
     private DatabaseReference mDatabaseRef;
-
-    private List<string> matchmakingQueue = new List<string>();
+    private DatabaseReference mMatchmakingQueueRef;
 
     private bool isMatchmaking = false;
 
@@ -22,6 +21,10 @@ public class MatchmakingController : MonoBehaviour
     {
         _matchmakingButton.onClick.AddListener(HandleMatchmakingButtonClicked);
         mDatabaseRef = FirebaseDatabase.DefaultInstance.RootReference;
+        mMatchmakingQueueRef = mDatabaseRef.Child("matchmakingQueue");
+
+        // Escuchar cambios en la cola de matchmaking
+        mMatchmakingQueueRef.ValueChanged += HandleMatchmakingQueueChanged;
 
         // Obtener y mostrar el nombre de usuario al iniciar el juego
         if (FirebaseAuth.DefaultInstance.CurrentUser != null)
@@ -35,54 +38,37 @@ public class MatchmakingController : MonoBehaviour
     {
         if (!isMatchmaking)
         {
-            // Agregar al jugador actual a la cola de matchmaking
+            // Agregar al jugador actual a la cola de matchmaking en Firebase
             string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-            matchmakingQueue.Add(userId);
+            mMatchmakingQueueRef.Child(userId).SetValueAsync(true);
             isMatchmaking = true;
             _matchmakingButton.interactable = false;
-
-            // Mostrar que se está buscando partida
-            
-            _textMP2.text = "Searching for match...";
-
-            // Comprobar si hay suficientes jugadores en la cola
-            CheckMatchmakingQueue();
         }
     }
 
-    private void CheckMatchmakingQueue()
+    private void HandleMatchmakingQueueChanged(object sender, ValueChangedEventArgs args)
     {
-        if (matchmakingQueue.Count >= 2)
+        if (args.DatabaseError != null)
         {
-            StartCoroutine(MatchmakePlayers());
+            Debug.LogError("Database error: " + args.DatabaseError.Message);
+            return;
         }
-        else
+
+        if (args.Snapshot != null && args.Snapshot.ChildrenCount >= 2)
         {
-            Debug.Log("Waiting for more players in the matchmaking queue...");
+            // Hay al menos dos jugadores en la cola, iniciar emparejamiento
+            StartCoroutine(MatchmakePlayers());
         }
     }
 
     private IEnumerator MatchmakePlayers()
     {
-        // Emparejar jugadores (aquí puedes implementar tu lógica de emparejamiento)
-        string player1Id = matchmakingQueue[0];
-        string player2Id = matchmakingQueue[1];
+        // Implementa tu lógica de emparejamiento aquí
 
-        // Obtener los nombres de los jugadores emparejados
-        string player1Name = "";
-        string player2Name = "";
+        // Una vez emparejados, limpia la cola de matchmaking en Firebase
+        mMatchmakingQueueRef.RemoveValueAsync();
 
-        yield return GetPlayerName(player1Id, name => player1Name = name);
-        yield return GetPlayerName(player2Id, name => player2Name = name);
-
-        // Mostrar los nombres de los jugadores emparejados
-        _textMP1.text = "Match found! Player 1: " + player1Name;
-        _textMP2.text = "Match found! Player 2: " + player2Name;
-
-        // Limpiar la cola de matchmaking
-        matchmakingQueue.Clear();
-        isMatchmaking = false;
-        _matchmakingButton.interactable = true;
+        yield return null;
     }
 
     private IEnumerator GetPlayerName(string playerId, System.Action<string> callback)

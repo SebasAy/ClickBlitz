@@ -5388,7 +5388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _friendsListPanel: {fileID: 424120876}
-  _friendPrefab: {fileID: 6849288571789756770, guid: 4b093779e3a0543489bff1b26a7a97b4, type: 3}
+  _friendPrefab: {fileID: 3188302566791422992, guid: 4b093779e3a0543489bff1b26a7a97b4, type: 3}
 --- !u!114 &1458304225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5402,7 +5402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   notificationPanel: {fileID: 1661042293}
-  friendEntryPrefab: {fileID: 6849288571789756770, guid: 4b093779e3a0543489bff1b26a7a97b4, type: 3}
+  friendEntryPrefab: {fileID: 8506664958542518390, guid: df297f0848b6e8942801d5aeb2cbd4fb, type: 3}
   notificationPanelTransform: {fileID: 378435881}
 --- !u!1 &1526866565
 GameObject:

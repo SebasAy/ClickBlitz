@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FrienRequestManager : MonoBehaviour
+public class FriendRequestManager : MonoBehaviour
 {
     private DatabaseReference mDatabaseRef;
     private FirebaseAuth auth;

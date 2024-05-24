@@ -67,9 +67,6 @@ public class Notification : MonoBehaviour
                 GameObject friendEntry = Instantiate(friendEntryPrefab, notificationPanelTransform);
                 FriendEntry friendEntryScript = friendEntry.GetComponent<FriendEntry>();
                 friendEntryScript.SetFriendData(friendId, username);
-                // Manually update the status to the current one
-                TMP_Text statusText = friendEntryScript.GetComponentInChildren<TMP_Text>();
-                statusText.text = status;
             }
             else
             {

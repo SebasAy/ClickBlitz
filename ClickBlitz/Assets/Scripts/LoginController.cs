@@ -38,7 +38,7 @@ public class LoginController : MonoBehaviour
         _LoginPanel = GameObject.Find("Login").GetComponent<GameObject>();
         _SignUpPanel = GameObject.Find("SignUp").GetComponent<GameObject>();
         _ResetPanel = GameObject.Find("Reset").GetComponent<GameObject>();
-        _GamePanel = GameObject.Find("Juego").GetComponent<GameObject>();
+        _GamePanel = GameObject.Find("GamePanel").GetComponent<GameObject>();
     }
     void Start()
     {
@@ -69,6 +69,11 @@ public class LoginController : MonoBehaviour
                 result.User.DisplayName, result.User.UserId);
 
         });
+        if (FirebaseAuth.DefaultInstance.CurrentUser != null)
+        {
+            _LoginPanel.SetActive(false);
+            _GamePanel.SetActive(true);
+        }
     }
     private void HandleSignUpButtonClicked()
     {

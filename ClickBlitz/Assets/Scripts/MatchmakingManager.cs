@@ -54,21 +54,38 @@ public class MatchmakingController : MonoBehaviour
             return;
         }
 
-        if (args.Snapshot != null && args.Snapshot.ChildrenCount >= 2)
+        if (args.Snapshot != null)
         {
-            // Hay al menos dos jugadores en la cola, iniciar emparejamiento
-            StartCoroutine(MatchmakePlayers());
+            // Obtener todos los jugadores en la cola de matchmaking
+            Dictionary<string, object> queue = (Dictionary<string, object>)args.Snapshot.Value;
+            List<string> playerIds = new List<string>(queue.Keys);
+
+            // Verificar si hay suficientes jugadores en la cola
+            if (playerIds.Count >= 2)
+            {
+                // Obtener los nombres de los jugadores emparejados
+                StartCoroutine(GetPlayerName(playerIds[0], name => _textMP1.text = "Match found! Player 1: " + name));
+                StartCoroutine(GetPlayerName(playerIds[1], name => _textMP2.text = "Match found! Player 2: " + name));
+
+                // Iniciar emparejamiento
+                StartCoroutine(MatchmakePlayers(playerIds));
+            }
         }
     }
 
-    private IEnumerator MatchmakePlayers()
+    private IEnumerator MatchmakePlayers(List<string> playerIds)
     {
         // Implementa tu lógica de emparejamiento aquí
+        yield return new WaitForSeconds(1f); // Simulando un tiempo de espera
 
-        // Una vez emparejados, limpia la cola de matchmaking en Firebase
-        mMatchmakingQueueRef.RemoveValueAsync();
+        // Una vez emparejados, limpiar la cola de matchmaking en Firebase
+        foreach (string playerId in playerIds)
+        {
+            mMatchmakingQueueRef.Child(playerId).RemoveValueAsync();
+        }
 
-        yield return null;
+        isMatchmaking = false;
+        _matchmakingButton.interactable = true;
     }
 
     private IEnumerator GetPlayerName(string playerId, System.Action<string> callback)

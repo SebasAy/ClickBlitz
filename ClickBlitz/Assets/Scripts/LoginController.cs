@@ -15,8 +15,6 @@ public class LoginController : MonoBehaviour
     [SerializeField]
     private Button _SignUpButton;
     [SerializeField]
-    private Button _ResetButton;
-    [SerializeField]
     private GameObject _LoginPanel;
     [SerializeField]
     private GameObject _SignUpPanel;
@@ -33,19 +31,16 @@ public class LoginController : MonoBehaviour
     {
         _loginButton = GameObject.Find("LoginButton").GetComponent<Button>();
         _SignUpButton = GameObject.Find("SignUpLButton").GetComponent<Button>();
-        _ResetButton = GameObject.Find("ResetLButton").GetComponent<Button>();
         _emailInputField = GameObject.Find("EmailLogin").GetComponent<TMP_InputField>();
         _passwordInputField = GameObject.Find("PasswordLogin").GetComponent<TMP_InputField>();
         _LoginPanel = GameObject.Find("Login").GetComponent<GameObject>();
         _SignUpPanel = GameObject.Find("SignUp").GetComponent<GameObject>();
-        _ResetPanel = GameObject.Find("Reset").GetComponent<GameObject>();
         _GamePanel = GameObject.Find("GamePanel").GetComponent<GameObject>();
     }
     void Start()
     {
         _loginButton.onClick.AddListener(HandleLoginButtonClicked);
         _SignUpButton.onClick.AddListener(HandleSignUpButtonClicked);
-        _ResetButton.onClick.AddListener(HandleResetButtonClicked);
         FirebaseAuth.DefaultInstance.StateChanged += HandleAuthStateChange;
     }
 
@@ -70,23 +65,11 @@ public class LoginController : MonoBehaviour
                 result.User.DisplayName, result.User.UserId);
 
         });
-        if (FirebaseAuth.DefaultInstance.CurrentUser != null)
-        {
-            _LoginPanel.SetActive(false);
-            _GamePanel.SetActive(true);
-            string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-            UpdateUserStatus(userId, "online");
-        }
     }
     private void HandleSignUpButtonClicked()
     {
         _LoginPanel.SetActive(false);
         _SignUpPanel.SetActive(true);
-    }
-    private void HandleResetButtonClicked()
-    {
-        _LoginPanel.SetActive(false);
-        _ResetPanel.SetActive(true);
     }
     private void HandleAuthStateChange(object sender, EventArgs e)
     {
@@ -94,6 +77,8 @@ public class LoginController : MonoBehaviour
         {
             _LoginPanel.SetActive(false);
             _GamePanel.SetActive(true);
+            string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            UpdateUserStatus(userId, "online");
         }
     }
     private void UpdateUserStatus(string userId, string status)

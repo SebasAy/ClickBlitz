@@ -13,11 +13,6 @@ public class LogOutButton : MonoBehaviour , IPointerClickHandler
     [SerializeField]
     private GameObject _GamePanel;
 
-    void Reset()
-    {
-        _GamePanel = GameObject.Find("Juego").GetComponent<GameObject>();
-        _LoginPanel = GameObject.Find("Login").GetComponent<GameObject>();
-    }
     public void OnPointerClick(PointerEventData eventData)
     {
         string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;

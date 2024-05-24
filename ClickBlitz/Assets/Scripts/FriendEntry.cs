@@ -4,13 +4,12 @@ using UnityEngine;
 public class FriendEntry : MonoBehaviour
 {
     [SerializeField] private TMP_Text usernameText;
-    [SerializeField] private TMP_Text statusText;
 
-    public void SetFriendData(string username, bool isOnline)
+    private string friendId;
+
+    public void SetFriendData(string friendId, string username)
     {
-        {
-            usernameText.text = username;
-            statusText.text = isOnline ? "On" : "Off";
-        }
+        this.friendId = friendId;
+        usernameText.text = username;
     }
 }

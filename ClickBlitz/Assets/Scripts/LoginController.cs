@@ -1,4 +1,5 @@
 using Firebase.Auth;
+using Firebase.Database;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -73,6 +74,8 @@ public class LoginController : MonoBehaviour
         {
             _LoginPanel.SetActive(false);
             _GamePanel.SetActive(true);
+            string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            UpdateUserStatus(userId, "online");
         }
     }
     private void HandleSignUpButtonClicked()
@@ -93,7 +96,11 @@ public class LoginController : MonoBehaviour
             _GamePanel.SetActive(true);
         }
     }
-
+    private void UpdateUserStatus(string userId, string status)
+    {
+        DatabaseReference statusRef = FirebaseDatabase.DefaultInstance.GetReference("status").Child(userId);
+        statusRef.SetValueAsync(status);
+    }
     void OnDestroy()
     {
         FirebaseAuth.DefaultInstance.StateChanged -= HandleAuthStateChange;

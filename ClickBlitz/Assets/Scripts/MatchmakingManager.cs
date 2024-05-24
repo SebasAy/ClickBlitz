@@ -22,6 +22,13 @@ public class MatchmakingController : MonoBehaviour
     {
         _matchmakingButton.onClick.AddListener(HandleMatchmakingButtonClicked);
         mDatabaseRef = FirebaseDatabase.DefaultInstance.RootReference;
+
+        // Obtener y mostrar el nombre de usuario al iniciar el juego
+        if (FirebaseAuth.DefaultInstance.CurrentUser != null)
+        {
+            string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            StartCoroutine(GetPlayerName(userId, name => _textMP1.text = "Welcome, " + name));
+        }
     }
 
     private void HandleMatchmakingButtonClicked()
@@ -35,16 +42,23 @@ public class MatchmakingController : MonoBehaviour
             _matchmakingButton.interactable = false;
 
             // Mostrar que se está buscando partida
-            Debug.Log("Searching for match...");
-            _textMP1.text = "Searching for match...";
+            
             _textMP2.text = "Searching for match...";
 
             // Comprobar si hay suficientes jugadores en la cola
-            if (matchmakingQueue.Count >= 2)
-            {
-                Debug.Log("2 jugadores buscando");
-                StartCoroutine(MatchmakePlayers());
-            }
+            CheckMatchmakingQueue();
+        }
+    }
+
+    private void CheckMatchmakingQueue()
+    {
+        if (matchmakingQueue.Count >= 2)
+        {
+            StartCoroutine(MatchmakePlayers());
+        }
+        else
+        {
+            Debug.Log("Waiting for more players in the matchmaking queue...");
         }
     }
 
@@ -57,8 +71,6 @@ public class MatchmakingController : MonoBehaviour
         // Obtener los nombres de los jugadores emparejados
         string player1Name = "";
         string player2Name = "";
-
-        Debug.Log("Matchmaking complete. Players matched: " + player1Id + " and " + player2Id);
 
         yield return GetPlayerName(player1Id, name => player1Name = name);
         yield return GetPlayerName(player2Id, name => player2Name = name);
